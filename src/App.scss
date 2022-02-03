@@ -1,0 +1,16 @@
+body {
+  font-family: "Open Sans Condensed";
+}
+.components {
+  font-family: "Open Sans Condensed";
+  padding: 20px 60px;
+}
+* {
+  box-sizing: border-box;
+}
+@media (max-width: 800px) {
+  .components {
+    width: 100%;
+    padding: 10px;
+  }
+}

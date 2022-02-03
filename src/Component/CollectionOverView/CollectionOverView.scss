@@ -1,0 +1,19 @@
+.collection-overview {
+  .title {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    margin: 30px auto;
+    font-size: 40px;
+  }
+  .collection {
+    display: flex;
+    flex-direction: row;
+    flex-wrap: wrap;
+    justify-content: space-between;
+    align-items: center;
+    .collection-item {
+      margin-bottom: 25px;
+    }
+  }
+}
