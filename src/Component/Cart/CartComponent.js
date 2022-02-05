@@ -22,7 +22,7 @@ function CartComponent() {
   return (
     <div className="cart-icon">
       <i
-        class="fas fa-shopping-cart shopping-cart"
+        className="fas fa-shopping-cart shopping-cart"
         onClick={handleDropdown}
       ></i>
 

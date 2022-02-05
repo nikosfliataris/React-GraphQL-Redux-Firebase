@@ -21,6 +21,7 @@ const ShopPage = lazy(() => import("./Page/ShopPage/ShopPage"));
 const CheckOut = lazy(() => import("./Page/CheckOut.js/CheckOut"));
 const SignIn = lazy(() => import("./Page/SignIn/SignIn"));
 const Registration = lazy(() => import("./Page/Registration/Registration"));
+const Payment = lazy(() => import("./Page/Payment/Payment"));
 ////////////
 function App() {
   const [currentuser, setCurrentUser] = useState(null);
@@ -123,6 +124,15 @@ function App() {
             element={
               <Suspense fallback={<Spinner />}>
                 <CheckOut />
+              </Suspense>
+            }
+          />
+          <Route
+            exact
+            path="/payment"
+            element={
+              <Suspense fallback={<Spinner />}>
+                <Payment />
               </Suspense>
             }
           />

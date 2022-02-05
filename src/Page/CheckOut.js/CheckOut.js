@@ -3,10 +3,13 @@ import { useSelector } from "react-redux";
 import "./CheckOut.scss";
 import CartItemComponent from "./../../Component/CartItemComponent/Component";
 import StripeButton from "../../Component/StripeButton/StripeButton";
+import { useNavigate } from "react-router-dom";
+import Button from "../../Component/FormButton/Custom-Button";
 
 function CheckOut() {
   const Items = useSelector((state) => ({ cartItem: state.cart.cartItem }));
   console.log(Items.cartItem);
+  const history = useNavigate();
   const { Total_Price } = useSelector(({ cart: { cartItem } }) => ({
     Total_Price: cartItem.reduce(
       (accumelatedPrice, cartItem) =>
@@ -14,6 +17,9 @@ function CheckOut() {
       0
     ),
   }));
+  const handleClick = (e) => {
+    e.preventDefault(history({ pathname: "/payment" }));
+  };
 
   return (
     <div className="checkout-page">
@@ -43,7 +49,7 @@ function CheckOut() {
         <br />
         4242-4242-4242-4242 Exp:01/22 - CVC:123
       </div>
-      <StripeButton price={Total_Price} />
+      <Button onClick={handleClick}>Pay Now</Button>
     </div>
   );
 }
