@@ -10,32 +10,6 @@ app.use(express.json());
 app.use(express.static("public"));
 app.use(cors({ origin: true }));
 
-// app.get("/", (req, res) => res.status(200).send("hello from sever"));
-
-// app.post("/payment/create", async (request, response) => {
-//   try {
-//     const { amount, shipping } = request.body;
-//     const paymentIntent = await stripe.paymentIntents.create({
-//       amount,
-//       shipping,
-//       currency: "usd",
-//     });
-//     response.send({
-//       clientSecret: paymentIntent.client_secret,
-//     });
-//   } catch (err) {
-//     response.status(500).json({
-//       statusCode: 500,
-//       message: err.message,
-//     });
-//   }
-// });
-
-// app.get("*", (request, response) => {
-//   response.status(404).send("404 Not Found");
-// });
-// exports.api = functions.https.onRequest(app);
-
 exports.api = functions.https.onRequest(
   app.post("/payment/create", async (req, res) => {
     const { amount } = req.body;
