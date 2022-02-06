@@ -32,7 +32,7 @@ const cartReducer = (state = INITIAL_STATE, action) => {
     case CartTypes.EMPTY:
       return {
         ...state,
-        cartItem: null,
+        cartItem: [],
       };
     default:
       return state;

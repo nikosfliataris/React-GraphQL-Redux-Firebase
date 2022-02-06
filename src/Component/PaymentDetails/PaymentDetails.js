@@ -1,19 +1,25 @@
 import React, { useState } from "react";
 import "./PaymentDetails.scss";
 import { useStripe, useElements, CardElement } from "@stripe/react-stripe-js";
-import { useSelector } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import axios from "./../../Axios";
 import Form from "../FormInput/Form";
 import Button from "../FormButton/Custom-Button";
+import { useNavigate } from "react-router-dom";
+import { emptyCart } from "../../Redux/Cart/CartAction";
 
 function PaymentDetails() {
   const stripe = useStripe();
   const elements = useElements();
   const user = useSelector((state) => state.user.User);
+  const cart = useSelector((state) => state.cart.cartItem);
+  const history = useNavigate();
+  const dispatch = useDispatch();
   const [fullname, setFullname] = useState("");
   const [price, setPrice] = useState("");
   const [email, setEmail] = useState("");
   const [address, setAddress] = useState("");
+  const [clientSecret, setClientSecret] = useState("");
   const { Total_Price } = useSelector(({ cart: { cartItem } }) => ({
     Total_Price: cartItem.reduce(
       (accumelatedPrice, cartItem) =>
@@ -29,11 +35,6 @@ function PaymentDetails() {
     axios
       .post("/payment/create", {
         amount: Total_Price * 100,
-        shipping: {
-          name: fullname,
-          address: address,
-          email: email,
-        },
       })
       .then(({ data: clientSecret }) => {
         stripe
@@ -43,10 +44,12 @@ function PaymentDetails() {
           })
           .then(({ paymentMethod }) => {
             stripe.confirmCardPayment(clientSecret, {
-              payment_method: paymentMethod.id,
+              payment_method: { card: cardElement.paymentMethod },
             });
-          });
-      });
+          })
+          .then(history({ pathname: "/" }));
+      })
+      .then(dispatch(emptyCart()));
   };
   return (
     <div className="paymentdetails">
@@ -106,7 +109,7 @@ function PaymentDetails() {
           handleChange={(e) => setPrice(Total_Price)}
           required
         />
-        <CardElement className="card-details" />
+        <CardElement className="card" />
         <Button type="submit">Payment</Button>
       </form>
     </div>

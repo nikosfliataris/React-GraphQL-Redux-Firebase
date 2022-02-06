@@ -7,28 +7,50 @@ const stripe = require("stripe")(
 
 const app = express();
 app.use(express.json());
+app.use(express.static("public"));
 app.use(cors({ origin: true }));
 
-app.get("/", (req, res) => res.status(200).send("hello from sever"));
+// app.get("/", (req, res) => res.status(200).send("hello from sever"));
 
-app.post("/payment/create", async (request, response) => {
-  try {
-    const { amount, shipping } = request.body;
-    const paymentIntent = await stripe.paymentIntent.create({
+// app.post("/payment/create", async (request, response) => {
+//   try {
+//     const { amount, shipping } = request.body;
+//     const paymentIntent = await stripe.paymentIntents.create({
+//       amount,
+//       shipping,
+//       currency: "usd",
+//     });
+//     response.send({
+//       clientSecret: paymentIntent.client_secret,
+//     });
+//   } catch (err) {
+//     response.status(500).json({
+//       statusCode: 500,
+//       message: err.message,
+//     });
+//   }
+// });
+
+// app.get("*", (request, response) => {
+//   response.status(404).send("404 Not Found");
+// });
+// exports.api = functions.https.onRequest(app);
+
+exports.api = functions.https.onRequest(
+  app.post("/payment/create", async (req, res) => {
+    const { amount } = req.body;
+
+    // Create a PaymentIntent with the order amount and currency
+    const paymentIntent = await stripe.paymentIntents.create({
       amount,
-      shipping,
       currency: "usd",
+      automatic_payment_methods: {
+        enabled: true,
+      },
     });
-    response.status(200).send(paymentIntent.client_secret);
-  } catch (err) {
-    response.status(500).json({
-      statusCode: 500,
-      message: err.message,
-    });
-  }
-});
 
-app.get("*", (request, response) => {
-  response.status(404).send("404 Not Found");
-});
-exports.api = functions.https.onRequest(app);
+    res.send({
+      clientSecret: paymentIntent.client_secret,
+    });
+  })
+);
